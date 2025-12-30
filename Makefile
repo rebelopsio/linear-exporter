@@ -5,7 +5,7 @@
 GO 										:= golang:1.25
 ALPINE 								:= alpine:3.23
 VERSION 							:= "0.0.1-$(shell git rev-parse --short HEAD)"
-GOLANGCI_LINT_VERSION	:= 2.7.2
+GOLANGCI_LINT_VERSION	:= v2.7.2
 
 # Docker/Build variables
 EXPORTER_IMAGE 			?= linear-exporter:$(VERSION)
