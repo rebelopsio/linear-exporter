@@ -1,0 +1,8 @@
+#! /bin/bash
+set -e 
+
+# Add Makefile targets
+
+
+# Stage any generated changes
+git add -A

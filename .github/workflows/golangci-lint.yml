@@ -1,0 +1,38 @@
+---
+name: golangci-lint
+on:
+  push:
+    paths:
+      - "go.mod"
+      - "go.sum"
+      - "**.go"
+      - ".github/workflows/golangci-lint.yml"
+      - ".golangci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  golangci:
+    permissions:
+      contents: read
+      pull-requests: read
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Install Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.25.x
+      - name: Get golangci-lint version
+        id: golangci-lint-version
+        run: echo "version=(make print-golangci-lint-version)" >> $GITHUB_OUTPUT
+      - name: Lint
+        uses: golangci/golangci-lint@v9
+        with:
+          args: --verbose
+          version: ${{ steps.golangci-lint-version.outputs.version }}

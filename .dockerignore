@@ -1,0 +1,62 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.circleci
+Jenkinsfile
+
+# Documentation
+README.md
+BUILDING.md
+*.md
+docs/
+
+# Dependencies
+vendor/
+*.lock
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+*.out
+/bin
+/dist
+
+# Testing
+*.test
+coverage.out
+.coverage
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Misc
+.make
+Makefile
