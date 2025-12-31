@@ -95,6 +95,7 @@ func (e *Exporter) scrapeIssues() error {
 						}
 						cycle {
 							name
+							number
 						}
 						createdAt
 						updatedAt
@@ -164,10 +165,10 @@ func (e *Exporter) scrapeIssues() error {
 		}
 		issuesByTeam.WithLabelValues(teamName).Inc()
 
-		// Issues by cycle
-		cycleName := issue.Cycle.Name
-		if cycleName == "" {
-			cycleName = "backlog"
+		// Issues by cycle (use number since name is often null in Linear API)
+		cycleName := "backlog"
+		if issue.Cycle != nil && issue.Cycle.Number != nil {
+			cycleName = fmt.Sprintf("Cycle %d", *issue.Cycle.Number)
 		}
 		issuesByCycle.WithLabelValues(cycleName, priorityName).Inc()
 

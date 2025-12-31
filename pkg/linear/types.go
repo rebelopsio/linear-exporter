@@ -32,8 +32,9 @@ type Issue struct {
 	Team struct {
 		Name string `json:"name"`
 	} `json:"team"`
-	Cycle struct {
-		Name string `json:"name"`
+	Cycle *struct {
+		Name   *string `json:"name"`
+		Number *int    `json:"number"`
 	} `json:"cycle"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
