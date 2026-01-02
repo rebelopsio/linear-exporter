@@ -64,6 +64,7 @@ func (e *Exporter) scrapeIssues() error {
 	issuesByTeam.Reset()
 	issuesByCycle.Reset()
 	issueAgeHours.Reset()
+	issuesRemainingByCycle.Reset()
 
 	// Fetch issues in batches with cursor-based pagination
 	// Filter to open issues and issues in cycles for more relevant data
@@ -172,6 +173,18 @@ func (e *Exporter) scrapeIssues() error {
 		}
 		issuesByCycle.WithLabelValues(cycleName, priorityName).Inc()
 
+		// Issues completed total
+		if strings.Contains(strings.ToLower(issue.State.Name), "done") ||
+			strings.Contains(strings.ToLower(issue.State.Name), "cancel") {
+			issuesCompletedTotal.WithLabelValues(cycleName).Inc()
+		}
+
+		// Issues remaining by cycle
+		if !strings.Contains(strings.ToLower(issue.State.Name), "done") &&
+			!strings.Contains(strings.ToLower(issue.State.Name), "cancel") {
+			issuesRemainingByCycle.WithLabelValues(cycleName).Inc()
+		}
+
 		// Issue age (only for non-resolved issues)
 		if !strings.Contains(strings.ToLower(issue.State.Name), "done") &&
 			!strings.Contains(strings.ToLower(issue.State.Name), "cancel") {
@@ -204,6 +217,8 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	totalIssuesTracked.Collect(ch)
 	scrapeErrors.Collect(ch)
 	scrapeDurationSeconds.Collect(ch)
+	issuesCompletedTotal.Collect(ch)
+	issuesRemainingByCycle.Collect(ch)
 }
 
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
@@ -215,4 +230,6 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	totalIssuesTracked.Describe(ch)
 	scrapeErrors.Describe(ch)
 	scrapeDurationSeconds.Describe(ch)
+	issuesCompletedTotal.Describe(ch)
+	issuesRemainingByCycle.Describe(ch)
 }
