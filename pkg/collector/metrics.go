@@ -65,4 +65,20 @@ var (
 			Help: "Duration of the last scrape in seconds",
 		},
 	)
+
+	issuesCompletedTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "linear_issues_completed_total",
+			Help: "Total number of completed issues by cycle",
+		},
+		[]string{"cycle"},
+	)
+
+	issuesRemainingByCycle = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_issues_remaining",
+			Help: "Issues not yet completed by cycle",
+		},
+		[]string{"cycle"},
+	)
 )
