@@ -65,6 +65,17 @@ func (e *Exporter) scrapeIssues() error {
 	issuesByCycle.Reset()
 	issueAgeHours.Reset()
 	issuesRemainingByCycle.Reset()
+	issuesByProject.Reset()
+	projectProgress.Reset()
+	projectInfo.Reset()
+	projectIssueCount.Reset()
+	projectCompletedCount.Reset()
+	projectOpenCount.Reset()
+
+	// Fetch projects for metadata and progress
+	if err := e.scrapeProjects(); err != nil {
+		log.Printf("Error scraping projects: %v", err)
+	}
 
 	// Fetch issues in batches with cursor-based pagination
 	// Filter to open issues and issues in cycles for more relevant data
@@ -92,6 +103,10 @@ func (e *Exporter) scrapeIssues() error {
 							name
 						}
 						team {
+							name
+						}
+						project {
+							id
 							name
 						}
 						cycle {
@@ -145,6 +160,15 @@ func (e *Exporter) scrapeIssues() error {
 		4: "low",
 	}
 
+	// Track per-project issue counts
+	type projectCounts struct {
+		total     int
+		completed int
+		open      int
+		byStatus  map[string]int
+	}
+	projectStats := map[string]*projectCounts{}
+
 	now := time.Now()
 	totalIssuesTracked.Set(float64(len(allIssues)))
 
@@ -191,6 +215,149 @@ func (e *Exporter) scrapeIssues() error {
 			ageHours := now.Sub(issue.CreatedAt).Hours()
 			issueAgeHours.WithLabelValues(issue.State.Name, priorityName).Observe(ageHours)
 		}
+
+		// Per-project tracking
+		if issue.Project != nil && issue.Project.Name != "" {
+			pName := issue.Project.Name
+			if _, ok := projectStats[pName]; !ok {
+				projectStats[pName] = &projectCounts{byStatus: map[string]int{}}
+			}
+			pc := projectStats[pName]
+			pc.total++
+			pc.byStatus[issue.State.Name]++
+
+			isDone := strings.Contains(strings.ToLower(issue.State.Name), "done")
+			isCanceled := strings.Contains(strings.ToLower(issue.State.Name), "cancel") ||
+				strings.Contains(strings.ToLower(issue.State.Name), "duplicate")
+			if isDone {
+				pc.completed++
+			}
+			if !isDone && !isCanceled {
+				pc.open++
+			}
+		}
+	}
+
+	// Emit per-project metrics
+	for pName, pc := range projectStats {
+		projectIssueCount.WithLabelValues(pName).Set(float64(pc.total))
+		projectCompletedCount.WithLabelValues(pName).Set(float64(pc.completed))
+		projectOpenCount.WithLabelValues(pName).Set(float64(pc.open))
+		for status, count := range pc.byStatus {
+			issuesByProject.WithLabelValues(pName, status).Set(float64(count))
+		}
+	}
+
+	return nil
+}
+
+func (e *Exporter) scrapeProjects() error {
+	allProjects := []linear.Project{}
+	cursor := ""
+
+	for page := 0; page < 5; page++ {
+		var afterCursor string
+		if cursor != "" {
+			afterCursor = fmt.Sprintf(`, after: "%s"`, cursor)
+		}
+
+		query := fmt.Sprintf(`
+		{
+			projects(first: 50%s) {
+				nodes {
+					id
+					name
+					progress
+					state
+					priority
+					status {
+						name
+					}
+					lead {
+						name
+					}
+					startDate
+					targetDate
+					teams {
+						nodes {
+							name
+						}
+					}
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}
+		`, afterCursor)
+
+		data, err := e.graphQL(query)
+		if err != nil {
+			scrapeErrors.Inc()
+			log.Printf("Error fetching projects page %d: %v", page, err)
+			break
+		}
+
+		var projectData struct {
+			Projects linear.ProjectConnection `json:"projects"`
+		}
+		if err := json.Unmarshal(data, &projectData); err != nil {
+			scrapeErrors.Inc()
+			log.Printf("Error parsing projects page %d: %v", page, err)
+			break
+		}
+
+		allProjects = append(allProjects, projectData.Projects.Nodes...)
+
+		if !projectData.Projects.PageInfo.HasNextPage {
+			break
+		}
+		cursor = projectData.Projects.PageInfo.EndCursor
+	}
+
+	priorityNames := map[int]string{
+		0: "none",
+		1: "urgent",
+		2: "high",
+		3: "medium",
+		4: "low",
+	}
+
+	totalProjects.Set(float64(len(allProjects)))
+	log.Printf("Fetched %d projects from Linear", len(allProjects))
+
+	for _, p := range allProjects {
+		projectProgress.WithLabelValues(p.Name).Set(p.Progress)
+
+		statusName := "unknown"
+		if p.Status != nil {
+			statusName = p.Status.Name
+		}
+		leadName := "unassigned"
+		if p.Lead != nil && p.Lead.Name != "" {
+			leadName = p.Lead.Name
+		}
+		teamName := ""
+		if len(p.Teams.Nodes) > 0 {
+			teamName = p.Teams.Nodes[0].Name
+		}
+		pri := "none"
+		if p.Priority != nil {
+			if name, ok := priorityNames[*p.Priority]; ok {
+				pri = name
+			}
+		}
+		startDate := ""
+		if p.StartDate != nil {
+			startDate = *p.StartDate
+		}
+		targetDate := ""
+		if p.TargetDate != nil {
+			targetDate = *p.TargetDate
+		}
+
+		projectInfo.WithLabelValues(p.Name, statusName, leadName, teamName, pri, startDate, targetDate).Set(1)
 	}
 
 	return nil
@@ -219,6 +386,13 @@ func (e *Exporter) Collect(ch chan<- prometheus.Metric) {
 	scrapeDurationSeconds.Collect(ch)
 	issuesCompletedTotal.Collect(ch)
 	issuesRemainingByCycle.Collect(ch)
+	issuesByProject.Collect(ch)
+	projectProgress.Collect(ch)
+	projectInfo.Collect(ch)
+	projectIssueCount.Collect(ch)
+	projectCompletedCount.Collect(ch)
+	projectOpenCount.Collect(ch)
+	totalProjects.Collect(ch)
 }
 
 func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
@@ -232,4 +406,11 @@ func (e *Exporter) Describe(ch chan<- *prometheus.Desc) {
 	scrapeDurationSeconds.Describe(ch)
 	issuesCompletedTotal.Describe(ch)
 	issuesRemainingByCycle.Describe(ch)
+	issuesByProject.Describe(ch)
+	projectProgress.Describe(ch)
+	projectInfo.Describe(ch)
+	projectIssueCount.Describe(ch)
+	projectCompletedCount.Describe(ch)
+	projectOpenCount.Describe(ch)
+	totalProjects.Describe(ch)
 }

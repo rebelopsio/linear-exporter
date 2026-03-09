@@ -81,4 +81,59 @@ var (
 		},
 		[]string{"cycle"},
 	)
+
+	issuesByProject = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_issues_by_project",
+			Help: "Number of issues by project and status",
+		},
+		[]string{"project", "status"},
+	)
+
+	projectProgress = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_project_progress",
+			Help: "Project completion progress from Linear (0.0 to 1.0)",
+		},
+		[]string{"project"},
+	)
+
+	projectInfo = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_project_info",
+			Help: "Project metadata (value is always 1, use for label joins)",
+		},
+		[]string{"project", "status", "lead", "team", "priority", "start_date", "target_date"},
+	)
+
+	projectIssueCount = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_project_issue_count",
+			Help: "Total number of issues in a project",
+		},
+		[]string{"project"},
+	)
+
+	projectCompletedCount = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_project_completed_count",
+			Help: "Number of completed (Done) issues in a project",
+		},
+		[]string{"project"},
+	)
+
+	projectOpenCount = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "linear_project_open_count",
+			Help: "Number of open (non-Done, non-Canceled) issues in a project",
+		},
+		[]string{"project"},
+	)
+
+	totalProjects = prometheus.NewGauge(
+		prometheus.GaugeOpts{
+			Name: "linear_projects_total",
+			Help: "Total number of active Linear projects",
+		},
+	)
 )
