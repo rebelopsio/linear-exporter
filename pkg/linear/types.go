@@ -32,12 +32,45 @@ type Issue struct {
 	Team struct {
 		Name string `json:"name"`
 	} `json:"team"`
+	Project *struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"project"`
 	Cycle *struct {
 		Name   *string `json:"name"`
 		Number *int    `json:"number"`
 	} `json:"cycle"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+type ProjectConnection struct {
+	Nodes    []Project `json:"nodes"`
+	PageInfo struct {
+		HasNextPage bool   `json:"hasNextPage"`
+		EndCursor   string `json:"endCursor"`
+	} `json:"pageInfo"`
+}
+
+type Project struct {
+	ID       string  `json:"id"`
+	Name     string  `json:"name"`
+	Progress float64 `json:"progress"`
+	State    string  `json:"state"`
+	Priority *int    `json:"priority"`
+	Status   *struct {
+		Name string `json:"name"`
+	} `json:"status"`
+	Lead *struct {
+		Name string `json:"name"`
+	} `json:"lead"`
+	StartDate  *string `json:"startDate"`
+	TargetDate *string `json:"targetDate"`
+	Teams      struct {
+		Nodes []struct {
+			Name string `json:"name"`
+		} `json:"nodes"`
+	} `json:"teams"`
 }
 
 type TeamData struct {
