@@ -45,7 +45,7 @@ type Issue struct {
 }
 
 type ProjectConnection struct {
-	Nodes []Project `json:"nodes"`
+	Nodes    []Project `json:"nodes"`
 	PageInfo struct {
 		HasNextPage bool   `json:"hasNextPage"`
 		EndCursor   string `json:"endCursor"`
