@@ -1,0 +1,85 @@
+groups:
+  - name: linear.engineering
+    rules:
+      - alert: LinearUrgentIssueSLABreach
+        expr: linear_sla_breached_total{priority="urgent"} > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Urgent issues breaching SLA"
+          description: "{{ $value }} urgent issues have been open longer than 24 hours."
+
+      - alert: LinearHighPrioritySLABreach
+        expr: linear_sla_breached_total{priority="high"} > 0
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High priority issues breaching SLA"
+          description: "{{ $value }} high priority issues have been open longer than 72 hours."
+
+      - alert: LinearHighWIP
+        expr: linear_team_wip_issues_total > 15
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High WIP for team {{ $labels.team }}"
+          description: "Team {{ $labels.team }} has {{ $value }} issues in progress, exceeding the recommended limit of 15."
+
+      - alert: LinearProjectOffTrack
+        expr: linear_project_health == 2
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Project {{ $labels.project }} is off track"
+          description: "Project {{ $labels.project }} has been marked as off track for over 1 hour."
+
+      - alert: LinearExporterScrapeError
+        expr: increase(linear_api_scrape_errors_total[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Linear exporter scrape errors"
+          description: "The Linear exporter has encountered scrape errors in the {{ $labels.domain }} domain."
+
+      - alert: LinearCycleScopeCreep
+        expr: linear_cycle_added_issues_total / linear_cycle_issues_total > 0.2
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cycle scope creep detected"
+          description: "Cycle {{ $labels.cycle }} for team {{ $labels.team }} has more than 20% scope creep."
+
+      - alert: LinearProjectPastDeadline
+        expr: linear_project_target_date_timestamp < time() and linear_project_progress_percent < 100
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Project {{ $labels.project }} is past its target date"
+          description: "Project {{ $labels.project }} has passed its target date and is not yet complete."
+
+      - alert: LinearAPIRateLimitLow
+        expr: linear_api_rate_limit_remaining < 100
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Linear API rate limit running low"
+          description: "Only {{ $value }} API requests remaining in the current rate limit window."
+
+  - name: linear.exporter
+    rules:
+      - alert: LinearExporterDown
+        expr: up{job="linear-exporter"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Linear exporter is down"
+          description: "The Linear metrics exporter has been unreachable for 5 minutes."

@@ -5,6 +5,7 @@ services:
       - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alerts:/etc/prometheus/rules
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -19,10 +20,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana-dashboard.json:/etc/grafana/provisioning/dashboards/linear-dashboard.json
+      - ./dashboards:/etc/grafana/provisioning/dashboards/json
       - ./grafana-provisioning.yml:/etc/grafana/provisioning/dashboards/dashboard.yml
       - ./grafana-datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
     depends_on:
@@ -34,11 +34,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VERSION: "${VERSION:-dev}"
+        COMMIT: "${COMMIT:-unknown}"
+        BUILD_DATE: "${BUILD_DATE:-unknown}"
     ports:
       - "8080:8080"
     environment:
       - LINEAR_API_KEY=${LINEAR_API_KEY}
       - PORT=8080
+    volumes:
+      - ./config.example.yaml:/etc/linear-exporter/config.yaml:ro
     depends_on:
       - prometheus
     networks:
@@ -51,12 +57,12 @@ services:
           "--quiet",
           "--tries=1",
           "--spider",
-          "http://localhost:8080/health",
+          "http://localhost:8080/healthz",
         ]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 30s
 
 volumes:
   prometheus_data:

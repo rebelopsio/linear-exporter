@@ -1,0 +1,1037 @@
+{
+  "dashboard": {
+    "title": "Linear Engineering Overview",
+    "uid": "linear-overview",
+    "tags": ["linear", "engineering"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "5m",
+    "style": "dark",
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5m",
+        "10m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ]
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "team",
+          "label": "Team",
+          "type": "query",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "query": {
+            "query": "label_values(linear_issues_total, team)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "includeAll": true,
+          "multi": true,
+          "allValue": ".*",
+          "sort": 1,
+          "hide": 0,
+          "current": {}
+        },
+        {
+          "name": "project",
+          "label": "Project",
+          "type": "query",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "query": {
+            "query": "label_values(linear_issues_total, project)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "includeAll": true,
+          "multi": true,
+          "allValue": ".*",
+          "sort": 1,
+          "hide": 0,
+          "current": {}
+        }
+      ]
+    },
+    "panels": [
+      {
+        "id": 1,
+        "type": "row",
+        "title": "Right Now",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 0,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 2,
+        "title": "Open Issues by Priority",
+        "type": "stat",
+        "gridPos": {
+          "x": 0,
+          "y": 1,
+          "w": 10,
+          "h": 7
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "sum by (priority) (linear_issues_total{state!~\"Done|Cancelled\", team=~\"$team\"})",
+            "refId": "A",
+            "legendFormat": "{{priority}}",
+            "instant": true
+          }
+        ],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "auto",
+          "textMode": "auto",
+          "orientation": "horizontal",
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "short"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "urgent"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "fixed",
+                    "fixedColor": "red"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "high"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "fixed",
+                    "fixedColor": "orange"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "medium"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "fixed",
+                    "fixedColor": "yellow"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "low"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "none"
+              },
+              "properties": [
+                {
+                  "id": "color",
+                  "value": {
+                    "mode": "fixed",
+                    "fixedColor": "gray"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "title": "WIP by Team",
+        "type": "bargauge",
+        "gridPos": {
+          "x": 10,
+          "y": 1,
+          "w": 8,
+          "h": 7
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "linear_team_wip_issues_total{team=~\"$team\"}",
+            "refId": "A",
+            "legendFormat": "{{team}}",
+            "instant": true
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "valueMode": "color",
+          "showUnfilled": true,
+          "minVizHeight": 10,
+          "minVizWidth": 0,
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 5
+                },
+                {
+                  "color": "red",
+                  "value": 10
+                }
+              ]
+            },
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "short",
+            "min": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 4,
+        "title": "Urgent SLA Breaches",
+        "type": "stat",
+        "gridPos": {
+          "x": 18,
+          "y": 1,
+          "w": 6,
+          "h": 7
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "linear_sla_breached_total{priority=\"urgent\"}",
+            "refId": "A",
+            "legendFormat": "SLA Breaches",
+            "instant": true
+          }
+        ],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "none",
+          "justifyMode": "center",
+          "textMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [
+              {
+                "type": "value",
+                "options": {
+                  "0": {
+                    "text": "0",
+                    "color": "green",
+                    "index": 0
+                  }
+                }
+              }
+            ],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 1
+                }
+              ]
+            },
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 5,
+        "type": "row",
+        "title": "Throughput",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 8,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 6,
+        "title": "Issues Completed (7d)",
+        "type": "timeseries",
+        "gridPos": {
+          "x": 0,
+          "y": 9,
+          "w": 12,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "increase(linear_issues_completed_total{team=~\"$team\"}[7d])",
+            "refId": "A",
+            "legendFormat": "{{team}}"
+          }
+        ],
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 2,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 7,
+        "title": "Cycle Time P50",
+        "type": "stat",
+        "gridPos": {
+          "x": 12,
+          "y": 9,
+          "w": 6,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "histogram_quantile(0.5, rate(linear_issue_cycle_time_seconds_bucket{team=~\"$team\"}[7d]))",
+            "refId": "A",
+            "legendFormat": "P50 Cycle Time",
+            "instant": true
+          }
+        ],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center",
+          "textMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 259200
+                },
+                {
+                  "color": "red",
+                  "value": 604800
+                }
+              ]
+            },
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 8,
+        "title": "Lead Time P90",
+        "type": "stat",
+        "gridPos": {
+          "x": 18,
+          "y": 9,
+          "w": 6,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "histogram_quantile(0.9, rate(linear_issue_lead_time_seconds_bucket{team=~\"$team\"}[7d]))",
+            "refId": "A",
+            "legendFormat": "P90 Lead Time",
+            "instant": true
+          }
+        ],
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area",
+          "justifyMode": "center",
+          "textMode": "auto",
+          "orientation": "auto",
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 432000
+                },
+                {
+                  "color": "red",
+                  "value": 1209600
+                }
+              ]
+            },
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "s"
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 9,
+        "type": "row",
+        "title": "Team Health",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 17,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 10,
+        "title": "Team WIP vs Throughput",
+        "type": "table",
+        "gridPos": {
+          "x": 0,
+          "y": 18,
+          "w": 16,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "linear_team_wip_issues_total",
+            "refId": "A",
+            "legendFormat": "{{team}}",
+            "instant": true,
+            "format": "table"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "linear_team_throughput_issues_per_week",
+            "refId": "B",
+            "legendFormat": "{{team}}",
+            "instant": true,
+            "format": "table"
+          }
+        ],
+        "transformations": [
+          {
+            "id": "merge",
+            "options": {}
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true,
+                "__name__": true,
+                "job": true,
+                "instance": true
+              },
+              "indexByName": {
+                "team": 0,
+                "Value #A": 1,
+                "Value #B": 2
+              },
+              "renameByName": {
+                "team": "Team",
+                "Value #A": "WIP Issues",
+                "Value #B": "Throughput (issues/week)"
+              }
+            }
+          }
+        ],
+        "options": {
+          "showHeader": true,
+          "sortBy": [
+            {
+              "displayName": "WIP Issues",
+              "desc": true
+            }
+          ],
+          "cellHeight": "sm",
+          "footer": {
+            "show": false,
+            "reducer": ["sum"],
+            "countRows": false,
+            "fields": ""
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto",
+              "inspect": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "WIP Issues"
+              },
+              "properties": [
+                {
+                  "id": "custom.displayMode",
+                  "value": "color-background"
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 5
+                      },
+                      {
+                        "color": "red",
+                        "value": 10
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Throughput (issues/week)"
+              },
+              "properties": [
+                {
+                  "id": "custom.displayMode",
+                  "value": "color-background"
+                },
+                {
+                  "id": "thresholds",
+                  "value": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "red",
+                        "value": null
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 2
+                      },
+                      {
+                        "color": "green",
+                        "value": 5
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 11,
+        "title": "Unestimated Issues %",
+        "type": "bargauge",
+        "gridPos": {
+          "x": 16,
+          "y": 18,
+          "w": 8,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "sum by (team) (linear_issues_unestimated_total{team=~\"$team\"}) / sum by (team) (linear_issues_total{team=~\"$team\"}) * 100",
+            "refId": "A",
+            "legendFormat": "{{team}}",
+            "instant": true
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient",
+          "valueMode": "color",
+          "showUnfilled": true,
+          "minVizHeight": 10,
+          "minVizWidth": 0,
+          "reduceOptions": {
+            "calcs": ["lastNotNull"],
+            "fields": "",
+            "values": false
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 25
+                },
+                {
+                  "color": "red",
+                  "value": 50
+                }
+              ]
+            },
+            "color": {
+              "mode": "thresholds"
+            },
+            "unit": "percent",
+            "min": 0,
+            "max": 100
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 12,
+        "type": "row",
+        "title": "Trend",
+        "collapsed": false,
+        "gridPos": {
+          "x": 0,
+          "y": 26,
+          "w": 24,
+          "h": 1
+        },
+        "panels": []
+      },
+      {
+        "id": 13,
+        "title": "8-Week Completion Trend",
+        "type": "timeseries",
+        "gridPos": {
+          "x": 0,
+          "y": 27,
+          "w": 12,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "sum(increase(linear_issues_completed_total{team=~\"$team\"}[1w]))",
+            "refId": "A",
+            "legendFormat": "Completed Issues",
+            "interval": "1w"
+          }
+        ],
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "single",
+            "sort": "none"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "fixed",
+              "fixedColor": "green"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "Issues / week",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "bars",
+              "fillOpacity": 60,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 1,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "never",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "off"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            },
+            "unit": "short",
+            "min": 0
+          },
+          "overrides": []
+        }
+      },
+      {
+        "id": 14,
+        "title": "Scope Creep Ratio",
+        "type": "timeseries",
+        "gridPos": {
+          "x": 12,
+          "y": 27,
+          "w": 12,
+          "h": 8
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "prometheus"
+            },
+            "expr": "linear_project_scope_creep_ratio{project=~\"$project\"}",
+            "refId": "A",
+            "legendFormat": "{{project}}"
+          }
+        ],
+        "options": {
+          "legend": {
+            "displayMode": "list",
+            "placement": "bottom",
+            "showLegend": true
+          },
+          "tooltip": {
+            "mode": "multi",
+            "sort": "desc"
+          }
+        },
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "palette-classic"
+            },
+            "custom": {
+              "axisCenteredZero": false,
+              "axisColorMode": "text",
+              "axisLabel": "Ratio",
+              "axisPlacement": "auto",
+              "barAlignment": 0,
+              "drawStyle": "line",
+              "fillOpacity": 10,
+              "gradientMode": "none",
+              "hideFrom": {
+                "legend": false,
+                "tooltip": false,
+                "viz": false
+              },
+              "lineInterpolation": "linear",
+              "lineWidth": 2,
+              "pointSize": 5,
+              "scaleDistribution": {
+                "type": "linear"
+              },
+              "showPoints": "auto",
+              "spanNulls": false,
+              "stacking": {
+                "group": "A",
+                "mode": "none"
+              },
+              "thresholdsStyle": {
+                "mode": "line"
+              }
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 0.1
+                },
+                {
+                  "color": "red",
+                  "value": 0.25
+                }
+              ]
+            },
+            "unit": "percentunit",
+            "min": 0
+          },
+          "overrides": []
+        }
+      }
+    ]
+  }
+}
