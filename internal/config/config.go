@@ -26,10 +26,10 @@ type LinearConfig struct {
 }
 
 type ScrapeConfig struct {
-	IssuesInterval  time.Duration `mapstructure:"issues_interval"`
-	CyclesInterval  time.Duration `mapstructure:"cycles_interval"`
+	IssuesInterval   time.Duration `mapstructure:"issues_interval"`
+	CyclesInterval   time.Duration `mapstructure:"cycles_interval"`
 	ProjectsInterval time.Duration `mapstructure:"projects_interval"`
-	MembersInterval time.Duration `mapstructure:"members_interval"`
+	MembersInterval  time.Duration `mapstructure:"members_interval"`
 }
 
 type CacheConfig struct {
@@ -37,14 +37,14 @@ type CacheConfig struct {
 }
 
 type MetricsConfig struct {
-	CardinalityLimit int       `mapstructure:"cardinality_limit"`
-	HistogramBuckets Buckets   `mapstructure:"histogram_buckets"`
+	CardinalityLimit int     `mapstructure:"cardinality_limit"`
+	HistogramBuckets Buckets `mapstructure:"histogram_buckets"`
 }
 
 type Buckets struct {
-	CycleTime []float64 `mapstructure:"cycle_time"`
-	LeadTime  []float64 `mapstructure:"lead_time"`
-	IssueAge  []float64 `mapstructure:"issue_age"`
+	CycleTime  []float64 `mapstructure:"cycle_time"`
+	LeadTime   []float64 `mapstructure:"lead_time"`
+	IssueAge   []float64 `mapstructure:"issue_age"`
 	TriageTime []float64 `mapstructure:"triage_time"`
 }
 

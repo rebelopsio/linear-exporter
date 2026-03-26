@@ -29,23 +29,23 @@ type IssueConnection struct {
 }
 
 type Issue struct {
-	ID          string     `json:"id"`
-	Identifier  string     `json:"identifier"`
-	Title       string     `json:"title"`
-	Priority    int        `json:"priority"`
-	Estimate    *float64   `json:"estimate"`
-	DueDate     *string    `json:"dueDate"`
-	StartedAt   *time.Time `json:"startedAt"`
-	CompletedAt *time.Time `json:"completedAt"`
-	CanceledAt  *time.Time `json:"canceledAt"`
-	CreatedAt   time.Time  `json:"createdAt"`
-	UpdatedAt   time.Time  `json:"updatedAt"`
-	State       WorkflowState `json:"state"`
-	Team        TeamRef       `json:"team"`
-	Assignee    *UserRef      `json:"assignee"`
-	Project     *ProjectRef   `json:"project"`
-	Cycle       *CycleRef     `json:"cycle"`
-	Labels      LabelConnection `json:"labels"`
+	ID          string             `json:"id"`
+	Identifier  string             `json:"identifier"`
+	Title       string             `json:"title"`
+	Priority    int                `json:"priority"`
+	Estimate    *float64           `json:"estimate"`
+	DueDate     *string            `json:"dueDate"`
+	StartedAt   *time.Time         `json:"startedAt"`
+	CompletedAt *time.Time         `json:"completedAt"`
+	CanceledAt  *time.Time         `json:"canceledAt"`
+	CreatedAt   time.Time          `json:"createdAt"`
+	UpdatedAt   time.Time          `json:"updatedAt"`
+	State       WorkflowState      `json:"state"`
+	Team        TeamRef            `json:"team"`
+	Assignee    *UserRef           `json:"assignee"`
+	Project     *ProjectRef        `json:"project"`
+	Cycle       *CycleRef          `json:"cycle"`
+	Labels      LabelConnection    `json:"labels"`
 	Relations   RelationConnection `json:"relations"`
 }
 
@@ -67,8 +67,8 @@ type UserRef struct {
 }
 
 type ProjectRef struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID     string `json:"id"`
+	Name   string `json:"name"`
 	SlugID string `json:"slugId"`
 }
 
@@ -102,17 +102,17 @@ type CycleConnection struct {
 }
 
 type Cycle struct {
-	ID             string     `json:"id"`
-	Name           *string    `json:"name"`
-	Number         int        `json:"number"`
-	StartsAt       time.Time  `json:"startsAt"`
-	EndsAt         time.Time  `json:"endsAt"`
-	CompletedAt    *time.Time `json:"completedAt"`
-	Progress       float64    `json:"progress"`
-	ScopedIssueCount   int   `json:"scopedIssueCount,omitempty"`
-	CompletedIssueCount int  `json:"completedIssueCount,omitempty"`
-	Team           TeamRef    `json:"team"`
-	Issues         IssueConnection `json:"issues"`
+	ID                  string          `json:"id"`
+	Name                *string         `json:"name"`
+	Number              int             `json:"number"`
+	StartsAt            time.Time       `json:"startsAt"`
+	EndsAt              time.Time       `json:"endsAt"`
+	CompletedAt         *time.Time      `json:"completedAt"`
+	Progress            float64         `json:"progress"`
+	ScopedIssueCount    int             `json:"scopedIssueCount,omitempty"`
+	CompletedIssueCount int             `json:"completedIssueCount,omitempty"`
+	Team                TeamRef         `json:"team"`
+	Issues              IssueConnection `json:"issues"`
 }
 
 // Project types
@@ -122,19 +122,19 @@ type ProjectConnection struct {
 }
 
 type Project struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	SlugID      string   `json:"slugId"`
-	Progress    float64  `json:"progress"`
-	State       string   `json:"state"`
-	Health      string   `json:"health"` // onTrack, atRisk, offTrack
-	Priority    *int     `json:"priority"`
-	StartDate   *string  `json:"startDate"`
-	TargetDate  *string  `json:"targetDate"`
-	Status      *struct {
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	SlugID     string  `json:"slugId"`
+	Progress   float64 `json:"progress"`
+	State      string  `json:"state"`
+	Health     string  `json:"health"` // onTrack, atRisk, offTrack
+	Priority   *int    `json:"priority"`
+	StartDate  *string `json:"startDate"`
+	TargetDate *string `json:"targetDate"`
+	Status     *struct {
 		Name string `json:"name"`
 	} `json:"status"`
-	Lead *UserRef `json:"lead"`
+	Lead  *UserRef `json:"lead"`
 	Teams struct {
 		Nodes []TeamRef `json:"nodes"`
 	} `json:"teams"`
@@ -146,10 +146,10 @@ type Project struct {
 
 // Milestone types
 type Milestone struct {
-	ID          string     `json:"id"`
-	Name        string     `json:"name"`
-	TargetDate  *string    `json:"targetDate"`
-	SortOrder   float64    `json:"sortOrder"`
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	TargetDate *string `json:"targetDate"`
+	SortOrder  float64 `json:"sortOrder"`
 }
 
 // Team types
@@ -159,10 +159,10 @@ type TeamConnection struct {
 }
 
 type Team struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Key         string `json:"key"`
-	Members     struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Key     string `json:"key"`
+	Members struct {
 		Nodes []UserRef `json:"nodes"`
 	} `json:"members"`
 	States struct {
@@ -177,9 +177,9 @@ type UserConnection struct {
 }
 
 type User struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Active      bool   `json:"active"`
+	ID             string          `json:"id"`
+	Name           string          `json:"name"`
+	Active         bool            `json:"active"`
 	AssignedIssues IssueConnection `json:"assignedIssues"`
 }
 
@@ -196,8 +196,8 @@ type IssueLabelConnection struct {
 }
 
 type IssueLabel struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID     string          `json:"id"`
+	Name   string          `json:"name"`
 	Issues IssueConnection `json:"issues"`
 }
 

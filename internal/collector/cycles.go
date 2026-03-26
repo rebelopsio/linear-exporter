@@ -17,16 +17,16 @@ type CyclesCollector struct {
 	cache  *cache.Cache
 	cfg    *config.Config
 
-	cycleIssuesTotal       *prometheus.GaugeVec
-	cycleCompletedIssues   *prometheus.GaugeVec
-	cycleScopePoints       *prometheus.GaugeVec
-	cycleCompletedPoints   *prometheus.GaugeVec
-	cycleAddedIssues       *prometheus.GaugeVec
-	cycleRemovedIssues     *prometheus.GaugeVec
-	cycleProgressPercent   *prometheus.GaugeVec
-	cycleStartTimestamp    *prometheus.GaugeVec
-	cycleEndTimestamp      *prometheus.GaugeVec
-	cycleVelocityPoints    *prometheus.GaugeVec
+	cycleIssuesTotal     *prometheus.GaugeVec
+	cycleCompletedIssues *prometheus.GaugeVec
+	cycleScopePoints     *prometheus.GaugeVec
+	cycleCompletedPoints *prometheus.GaugeVec
+	cycleAddedIssues     *prometheus.GaugeVec
+	cycleRemovedIssues   *prometheus.GaugeVec
+	cycleProgressPercent *prometheus.GaugeVec
+	cycleStartTimestamp  *prometheus.GaugeVec
+	cycleEndTimestamp    *prometheus.GaugeVec
+	cycleVelocityPoints  *prometheus.GaugeVec
 
 	// Backward-compat
 	issuesCompletedByCycle *prometheus.GaugeVec
