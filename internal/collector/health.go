@@ -22,13 +22,13 @@ type HealthCollector struct {
 	cache  *cache.Cache
 	cfg    *config.Config
 
-	buildInfo            prometheus.Gauge
-	scrapeDuration       *prometheus.HistogramVec
-	scrapeErrorsTotal    *prometheus.CounterVec
-	rateLimitRemaining   prometheus.Gauge
-	apiRequestsTotal     *prometheus.CounterVec
-	slaBreachedTotal     *prometheus.GaugeVec
-	workflowStateIssues  *prometheus.GaugeVec
+	buildInfo           prometheus.Gauge
+	scrapeDuration      *prometheus.HistogramVec
+	scrapeErrorsTotal   *prometheus.CounterVec
+	rateLimitRemaining  prometheus.Gauge
+	apiRequestsTotal    *prometheus.CounterVec
+	slaBreachedTotal    *prometheus.GaugeVec
+	workflowStateIssues *prometheus.GaugeVec
 
 	// Backward-compat
 	scrapeErrorsCompat   prometheus.Counter

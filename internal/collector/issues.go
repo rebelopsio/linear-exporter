@@ -2,8 +2,8 @@ package collector
 
 import (
 	"context"
-	"log/slog"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -18,36 +18,36 @@ type IssuesCollector struct {
 	cfg    *config.Config
 
 	// Gauges
-	issuesTotal          *prometheus.GaugeVec
-	issueEstimatePoints  *prometheus.GaugeVec
-	issuesOverdueTotal   *prometheus.GaugeVec
-	issuesUnestimated    *prometheus.GaugeVec
-	issuesBlockedTotal   *prometheus.GaugeVec
-	urgentIssuesTotal    *prometheus.GaugeVec
-	highPriorityOpen     *prometheus.GaugeVec
+	issuesTotal         *prometheus.GaugeVec
+	issueEstimatePoints *prometheus.GaugeVec
+	issuesOverdueTotal  *prometheus.GaugeVec
+	issuesUnestimated   *prometheus.GaugeVec
+	issuesBlockedTotal  *prometheus.GaugeVec
+	urgentIssuesTotal   *prometheus.GaugeVec
+	highPriorityOpen    *prometheus.GaugeVec
 
 	// Backward-compat gauges (preserve existing metric names)
-	issuesByPriority     *prometheus.GaugeVec
-	issuesByStatus       *prometheus.GaugeVec
-	issuesByTeam         *prometheus.GaugeVec
-	issuesByCycle        *prometheus.GaugeVec
-	totalIssuesTracked   prometheus.Gauge
-	issuesByProject      *prometheus.GaugeVec
+	issuesByPriority   *prometheus.GaugeVec
+	issuesByStatus     *prometheus.GaugeVec
+	issuesByTeam       *prometheus.GaugeVec
+	issuesByCycle      *prometheus.GaugeVec
+	totalIssuesTracked prometheus.Gauge
+	issuesByProject    *prometheus.GaugeVec
 
 	// Counters
-	issuesCreatedTotal    *prometheus.CounterVec
-	issuesCompletedTotal  *prometheus.CounterVec
-	issuesCancelledTotal  *prometheus.CounterVec
+	issuesCreatedTotal   *prometheus.CounterVec
+	issuesCompletedTotal *prometheus.CounterVec
+	issuesCancelledTotal *prometheus.CounterVec
 
 	// Histograms
-	issueAgeSeconds       *prometheus.HistogramVec
-	issueCycleTime        *prometheus.HistogramVec
-	issueLeadTime         *prometheus.HistogramVec
-	issueTriageTime       *prometheus.HistogramVec
-	issueFirstResponse    *prometheus.HistogramVec
+	issueAgeSeconds    *prometheus.HistogramVec
+	issueCycleTime     *prometheus.HistogramVec
+	issueLeadTime      *prometheus.HistogramVec
+	issueTriageTime    *prometheus.HistogramVec
+	issueFirstResponse *prometheus.HistogramVec
 
 	// Backward-compat
-	issueAgeHours         *prometheus.HistogramVec
+	issueAgeHours *prometheus.HistogramVec
 }
 
 func NewIssuesCollector(client *linear.Client, c *cache.Cache, cfg *config.Config) *IssuesCollector {

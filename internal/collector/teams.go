@@ -16,11 +16,11 @@ type TeamsCollector struct {
 	cache  *cache.Cache
 	cfg    *config.Config
 
-	teamMembersTotal   *prometheus.GaugeVec
-	teamIssuesTotal    *prometheus.GaugeVec
-	teamWIPIssues      *prometheus.GaugeVec
-	teamWIPLimitRatio  *prometheus.GaugeVec
-	teamThroughput     *prometheus.GaugeVec
+	teamMembersTotal  *prometheus.GaugeVec
+	teamIssuesTotal   *prometheus.GaugeVec
+	teamWIPIssues     *prometheus.GaugeVec
+	teamWIPLimitRatio *prometheus.GaugeVec
+	teamThroughput    *prometheus.GaugeVec
 }
 
 func NewTeamsCollector(client *linear.Client, c *cache.Cache, cfg *config.Config) *TeamsCollector {
@@ -111,10 +111,10 @@ func (c *TeamsCollector) processTeams(teams []linear.Team, issues []linear.Issue
 
 	// Index issues by team
 	type teamStats struct {
-		byState     map[string]int
-		wip         int
+		byState       map[string]int
+		wip           int
 		completedWeek int
-		memberCount int
+		memberCount   int
 	}
 	stats := map[string]*teamStats{}
 
