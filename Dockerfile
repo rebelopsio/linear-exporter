@@ -14,11 +14,16 @@ RUN go mod download
 # Copy source code
 COPY . .
 
+# Build arguments for version info
+ARG VERSION=dev
+ARG COMMIT=unknown
+ARG BUILD_DATE=unknown
+
 # Build the binary with optimizations
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
-  -ldflags="-w -s" \
+  -ldflags="-w -s -X github.com/rebelopsio/linear-exporter/internal/collector.Version=${VERSION} -X github.com/rebelopsio/linear-exporter/internal/collector.Commit=${COMMIT} -X github.com/rebelopsio/linear-exporter/internal/collector.BuildDate=${BUILD_DATE}" \
   -a -installsuffix cgo \
-  -o linear-exporter .
+  -o linear-exporter ./cmd/exporter/
 
 # Stage 2: Runtime - Minimal final image
 FROM alpine:latest

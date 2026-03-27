@@ -1,0 +1,67 @@
+{
+  "issues": {
+    "nodes": [
+      {
+        "id": "issue-1",
+        "identifier": "ENG-1",
+        "title": "Fix login bug",
+        "priority": 1,
+        "estimate": 3,
+        "dueDate": "2025-01-01",
+        "startedAt": "2025-03-01T10:00:00Z",
+        "completedAt": "2025-03-05T15:00:00Z",
+        "canceledAt": null,
+        "createdAt": "2025-02-28T09:00:00Z",
+        "updatedAt": "2025-03-05T15:00:00Z",
+        "state": { "id": "state-1", "name": "Done", "type": "completed" },
+        "team": { "id": "team-1", "name": "Engineering", "key": "ENG" },
+        "assignee": { "id": "user-1", "name": "Alice" },
+        "project": { "id": "proj-1", "name": "Q1 Goals", "slugId": "q1-goals" },
+        "cycle": { "id": "cycle-1", "number": 5, "name": "Sprint 5" },
+        "labels": { "nodes": [{ "id": "label-1", "name": "bug" }] },
+        "relations": { "nodes": [] }
+      },
+      {
+        "id": "issue-2",
+        "identifier": "ENG-2",
+        "title": "Add dark mode",
+        "priority": 3,
+        "estimate": null,
+        "dueDate": null,
+        "startedAt": "2025-03-10T08:00:00Z",
+        "completedAt": null,
+        "canceledAt": null,
+        "createdAt": "2025-03-08T14:00:00Z",
+        "updatedAt": "2025-03-10T08:00:00Z",
+        "state": { "id": "state-2", "name": "In Progress", "type": "started" },
+        "team": { "id": "team-1", "name": "Engineering", "key": "ENG" },
+        "assignee": { "id": "user-2", "name": "Bob" },
+        "project": null,
+        "cycle": { "id": "cycle-1", "number": 5, "name": "Sprint 5" },
+        "labels": { "nodes": [{ "id": "label-2", "name": "feature" }] },
+        "relations": { "nodes": [{ "type": "is-blocked-by" }] }
+      },
+      {
+        "id": "issue-3",
+        "identifier": "ENG-3",
+        "title": "Urgent security patch",
+        "priority": 1,
+        "estimate": 5,
+        "dueDate": "2025-03-01",
+        "startedAt": null,
+        "completedAt": null,
+        "canceledAt": null,
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-03-01T00:00:00Z",
+        "state": { "id": "state-3", "name": "Backlog", "type": "backlog" },
+        "team": { "id": "team-2", "name": "Platform", "key": "PLAT" },
+        "assignee": null,
+        "project": { "id": "proj-1", "name": "Q1 Goals", "slugId": "q1-goals" },
+        "cycle": null,
+        "labels": { "nodes": [{ "id": "label-1", "name": "bug" }, { "id": "label-3", "name": "security" }] },
+        "relations": { "nodes": [] }
+      }
+    ],
+    "pageInfo": { "hasNextPage": false, "endCursor": "" }
+  }
+}

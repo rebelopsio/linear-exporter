@@ -1,0 +1,53 @@
+{
+  "projects": {
+    "nodes": [
+      {
+        "id": "proj-1",
+        "name": "Q1 Goals",
+        "slugId": "q1-goals",
+        "progress": 0.65,
+        "state": "started",
+        "health": "onTrack",
+        "priority": 1,
+        "startDate": "2025-01-01",
+        "targetDate": "2025-03-31",
+        "status": { "name": "In Progress" },
+        "lead": { "id": "user-1", "name": "Alice" },
+        "teams": { "nodes": [{ "id": "team-1", "name": "Engineering", "key": "ENG" }] },
+        "projectMilestones": {
+          "nodes": [
+            { "id": "ms-1", "name": "MVP", "targetDate": "2025-02-15", "sortOrder": 1 },
+            { "id": "ms-2", "name": "Beta", "targetDate": "2025-03-15", "sortOrder": 2 }
+          ]
+        },
+        "issues": {
+          "nodes": [
+            { "id": "issue-1", "state": { "id": "s1", "name": "Done", "type": "completed" }, "completedAt": "2025-03-05T15:00:00Z", "createdAt": "2025-01-15T00:00:00Z" },
+            { "id": "issue-3", "state": { "id": "s3", "name": "Backlog", "type": "backlog" }, "completedAt": null, "createdAt": "2025-02-01T00:00:00Z" }
+          ],
+          "pageInfo": { "hasNextPage": false, "endCursor": "" }
+        }
+      },
+      {
+        "id": "proj-2",
+        "name": "Tech Debt",
+        "slugId": "tech-debt",
+        "progress": 0.20,
+        "state": "started",
+        "health": "atRisk",
+        "priority": 3,
+        "startDate": "2025-01-15",
+        "targetDate": "2025-02-28",
+        "status": { "name": "At Risk" },
+        "lead": null,
+        "teams": { "nodes": [{ "id": "team-2", "name": "Platform", "key": "PLAT" }] },
+        "projectMilestones": { "nodes": [] },
+        "issues": {
+          "nodes": [],
+          "pageInfo": { "hasNextPage": false, "endCursor": "" }
+        }
+      }
+    ],
+    "pageInfo": { "hasNextPage": false, "endCursor": "" }
+  }
+}

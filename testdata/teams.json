@@ -1,0 +1,42 @@
+{
+  "teams": {
+    "nodes": [
+      {
+        "id": "team-1",
+        "name": "Engineering",
+        "key": "ENG",
+        "members": {
+          "nodes": [
+            { "id": "user-1", "name": "Alice" },
+            { "id": "user-2", "name": "Bob" }
+          ]
+        },
+        "states": {
+          "nodes": [
+            { "id": "state-1", "name": "Done", "type": "completed" },
+            { "id": "state-2", "name": "In Progress", "type": "started" },
+            { "id": "state-3", "name": "Backlog", "type": "backlog" }
+          ]
+        }
+      },
+      {
+        "id": "team-2",
+        "name": "Platform",
+        "key": "PLAT",
+        "members": {
+          "nodes": [
+            { "id": "user-3", "name": "Charlie" }
+          ]
+        },
+        "states": {
+          "nodes": [
+            { "id": "state-4", "name": "Done", "type": "completed" },
+            { "id": "state-5", "name": "In Progress", "type": "started" },
+            { "id": "state-6", "name": "Todo", "type": "unstarted" }
+          ]
+        }
+      }
+    ],
+    "pageInfo": { "hasNextPage": false, "endCursor": "" }
+  }
+}

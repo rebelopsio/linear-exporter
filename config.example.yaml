@@ -1,0 +1,24 @@
+linear:
+  api_key: ${LINEAR_API_KEY}
+  team_ids: []          # empty = all teams
+  project_ids: []       # empty = all projects
+
+scrape:
+  issues_interval: 60s
+  cycles_interval: 120s
+  projects_interval: 300s
+  members_interval: 300s
+
+cache:
+  ttl: 55s              # slightly under scrape interval
+
+metrics:
+  cardinality_limit: 1000  # warn if label set exceeds this
+  histogram_buckets:
+    cycle_time: [3600, 14400, 86400, 259200, 604800, 1209600]  # 1h→2w
+    lead_time:  [86400, 259200, 604800, 1209600, 2592000]      # 1d→30d
+    issue_age:  [86400, 259200, 604800, 1209600, 2592000, 5184000]  # 1d→60d
+    triage_time: [3600, 14400, 28800, 86400, 259200]            # 1h→3d
+
+server:
+  port: "8080"
