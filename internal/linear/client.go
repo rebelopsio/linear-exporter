@@ -16,7 +16,9 @@ import (
 
 const (
 	apiURL          = "https://api.linear.app/graphql"
-	defaultPageSize = 50
+	defaultPageSize    = 50
+	nestedPageSize     = 10 // For queries with deeply nested connections (cycles, projects, users)
+	nestedIssuesLimit  = 250 // Max issues to fetch per nested connection
 	maxRetries      = 3
 )
 
@@ -291,7 +293,7 @@ func (c *Client) FetchAllCycles(ctx context.Context, teamIDs []string) ([]Cycle,
 						completedAt
 						progress
 						team { id name key }
-						issues {
+						issues(first: %d) {
 							nodes {
 								id
 								priority
@@ -303,12 +305,11 @@ func (c *Client) FetchAllCycles(ctx context.Context, teamIDs []string) ([]Cycle,
 								completedAt
 								startedAt
 							}
-							pageInfo { hasNextPage endCursor }
 						}
 					}
 					pageInfo { hasNextPage endCursor }
 				}
-			}`, defaultPageSize, after, filter)
+			}`, nestedPageSize, after, filter, nestedIssuesLimit)
 			return q, nil
 		},
 		func(data json.RawMessage) (string, bool, error) {
@@ -357,19 +358,18 @@ func (c *Client) FetchAllProjects(ctx context.Context, projectIDs []string) ([]P
 						lead { id name }
 						teams { nodes { id name key } }
 						projectMilestones { nodes { id name targetDate sortOrder } }
-						issues {
+						issues(first: %d) {
 							nodes {
 								id
 								state { id name type }
 								completedAt
 								createdAt
 							}
-							pageInfo { hasNextPage endCursor }
 						}
 					}
 					pageInfo { hasNextPage endCursor }
 				}
-			}`, defaultPageSize, after, filter)
+			}`, nestedPageSize, after, filter, nestedIssuesLimit)
 			return q, nil
 		},
 		func(data json.RawMessage) (string, bool, error) {
@@ -446,7 +446,7 @@ func (c *Client) FetchAllUsers(ctx context.Context) ([]User, error) {
 						id
 						name
 						active
-						assignedIssues {
+						assignedIssues(first: %d) {
 							nodes {
 								id
 								priority
@@ -459,12 +459,11 @@ func (c *Client) FetchAllUsers(ctx context.Context) ([]User, error) {
 								startedAt
 								cycle { id number }
 							}
-							pageInfo { hasNextPage endCursor }
 						}
 					}
 					pageInfo { hasNextPage endCursor }
 				}
-			}`, defaultPageSize, after)
+			}`, nestedPageSize, after, nestedIssuesLimit)
 			return q, nil
 		},
 		func(data json.RawMessage) (string, bool, error) {
