@@ -17,8 +17,8 @@ import (
 const (
 	apiURL            = "https://api.linear.app/graphql"
 	defaultPageSize   = 50
-	nestedPageSize    = 10  // For queries with deeply nested connections (cycles, projects, users)
-	nestedIssuesLimit = 250 // Max issues to fetch per nested connection
+	nestedPageSize    = 5  // For queries with deeply nested connections (cycles, projects, users)
+	nestedIssuesLimit = 50 // Max issues to fetch per nested connection
 	maxRetries        = 3
 )
 
