@@ -1,849 +1,847 @@
 {
-  "dashboard": {
-    "title": "Linear Project Health",
-    "tags": [
-      "linear",
-      "engineering"
-    ],
-    "timezone": "browser",
-    "uid": "linear-project",
-    "schemaVersion": 38,
-    "version": 1,
-    "refresh": "5m",
-    "style": "dark",
-    "time": {
-      "from": "now-30d",
-      "to": "now"
+  "title": "Linear Project Health",
+  "tags": [
+    "linear",
+    "engineering"
+  ],
+  "timezone": "browser",
+  "uid": "linear-project",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "5m",
+  "style": "dark",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5m",
+      "10m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "project",
+        "label": "Project",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(linear_project_health, project)",
+        "query": {
+          "query": "label_values(linear_project_health, project)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "includeAll": true,
+        "multi": false,
+        "sort": 1,
+        "hide": 0,
+        "options": [],
+        "current": {}
+      },
+      {
+        "name": "team",
+        "label": "Team",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(linear_team_issues_total, team)",
+        "query": {
+          "query": "label_values(linear_team_issues_total, team)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "includeAll": true,
+        "multi": false,
+        "sort": 1,
+        "hide": 0,
+        "options": [],
+        "current": {}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "row",
+      "title": "Portfolio",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "panels": []
     },
-    "timepicker": {
-      "refresh_intervals": [
-        "5m",
-        "10m",
-        "30m",
-        "1h",
-        "2h",
-        "1d"
-      ]
-    },
-    "templating": {
-      "list": [
+    {
+      "id": 2,
+      "title": "All Projects Health",
+      "type": "table",
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
         {
-          "name": "project",
-          "label": "Project",
-          "type": "query",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "definition": "label_values(linear_project_health, project)",
-          "query": {
-            "query": "label_values(linear_project_health, project)",
-            "refId": "StandardVariableQuery"
-          },
-          "refresh": 2,
-          "includeAll": true,
-          "multi": false,
-          "sort": 1,
-          "hide": 0,
-          "options": [],
-          "current": {}
+          "expr": "linear_project_health",
+          "refId": "Health",
+          "legendFormat": "{{project}}",
+          "instant": true
         },
         {
-          "name": "team",
-          "label": "Team",
-          "type": "query",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "definition": "label_values(linear_team_issues_total, team)",
-          "query": {
-            "query": "label_values(linear_team_issues_total, team)",
-            "refId": "StandardVariableQuery"
-          },
-          "refresh": 2,
-          "includeAll": true,
-          "multi": false,
-          "sort": 1,
-          "hide": 0,
-          "options": [],
-          "current": {}
+          "expr": "linear_project_progress_percent",
+          "refId": "Progress",
+          "legendFormat": "{{project}}",
+          "instant": true
+        },
+        {
+          "expr": "linear_project_target_date_timestamp",
+          "refId": "TargetDate",
+          "legendFormat": "{{project}}",
+          "instant": true
         }
-      ]
-    },
-    "panels": [
-      {
-        "id": 1,
-        "type": "row",
-        "title": "Portfolio",
-        "collapsed": false,
-        "gridPos": {
-          "h": 1,
-          "w": 24,
-          "x": 0,
-          "y": 0
+      ],
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
         },
-        "panels": []
-      },
-      {
-        "id": 2,
-        "title": "All Projects Health",
-        "type": "table",
-        "gridPos": {
-          "h": 10,
-          "w": 24,
-          "x": 0,
-          "y": 1
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "targets": [
-          {
-            "expr": "linear_project_health",
-            "refId": "Health",
-            "legendFormat": "{{project}}",
-            "instant": true
-          },
-          {
-            "expr": "linear_project_progress_percent",
-            "refId": "Progress",
-            "legendFormat": "{{project}}",
-            "instant": true
-          },
-          {
-            "expr": "linear_project_target_date_timestamp",
-            "refId": "TargetDate",
-            "legendFormat": "{{project}}",
-            "instant": true
-          }
-        ],
-        "transformations": [
-          {
-            "id": "merge",
-            "options": {}
-          },
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {
-                "Time": true,
-                "__name__": true,
-                "instance": true,
-                "job": true
-              },
-              "indexByName": {
-                "project": 0,
-                "Value #Health": 1,
-                "Value #Progress": 2,
-                "Value #TargetDate": 3
-              },
-              "renameByName": {
-                "project": "Project",
-                "Value #Health": "Health",
-                "Value #Progress": "Progress (%)",
-                "Value #TargetDate": "Target Date"
-              }
-            }
-          },
-          {
-            "id": "convertFieldType",
-            "options": {
-              "conversions": [
-                {
-                  "targetField": "Target Date",
-                  "destinationType": "time"
-                }
-              ]
-            }
-          }
-        ],
-        "options": {
-          "showHeader": true,
-          "sortBy": [
-            {
-              "displayName": "Health",
-              "desc": true
-            }
-          ],
-          "cellHeight": "sm",
-          "footer": {
-            "show": false
-          }
-        },
-        "fieldConfig": {
-          "defaults": {
-            "custom": {
-              "align": "left",
-              "cellOptions": {
-                "type": "auto"
-              },
-              "inspect": false
-            }
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Health"
-              },
-              "properties": [
-                {
-                  "id": "custom.cellOptions",
-                  "value": {
-                    "type": "color-background"
-                  }
-                },
-                {
-                  "id": "mappings",
-                  "value": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "0": {
-                          "text": "On Track",
-                          "color": "green",
-                          "index": 0
-                        }
-                      }
-                    },
-                    {
-                      "type": "value",
-                      "options": {
-                        "1": {
-                          "text": "At Risk",
-                          "color": "yellow",
-                          "index": 1
-                        }
-                      }
-                    },
-                    {
-                      "type": "value",
-                      "options": {
-                        "2": {
-                          "text": "Off Track",
-                          "color": "red",
-                          "index": 2
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "color",
-                  "value": {
-                    "mode": "thresholds"
-                  }
-                },
-                {
-                  "id": "thresholds",
-                  "value": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "green",
-                        "value": null
-                      },
-                      {
-                        "color": "yellow",
-                        "value": 1
-                      },
-                      {
-                        "color": "red",
-                        "value": 2
-                      }
-                    ]
-                  }
-                }
-              ]
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
             },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Progress (%)"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "percent"
-                },
-                {
-                  "id": "min",
-                  "value": 0
-                },
-                {
-                  "id": "max",
-                  "value": 100
-                },
-                {
-                  "id": "custom.cellOptions",
-                  "value": {
-                    "type": "gauge",
-                    "mode": "basic"
-                  }
-                }
-              ]
+            "indexByName": {
+              "project": 0,
+              "Value #Health": 1,
+              "Value #Progress": 2,
+              "Value #TargetDate": 3
             },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Target Date"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "dateTimeFromNow"
-                },
-                {
-                  "id": "custom.width",
-                  "value": 180
-                }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        "id": 3,
-        "type": "row",
-        "title": "Per-Project Drill-down — $project",
-        "collapsed": false,
-        "gridPos": {
-          "h": 1,
-          "w": 24,
-          "x": 0,
-          "y": 11
-        },
-        "panels": []
-      },
-      {
-        "id": 4,
-        "title": "Progress",
-        "type": "gauge",
-        "gridPos": {
-          "h": 8,
-          "w": 6,
-          "x": 0,
-          "y": 12
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "targets": [
-          {
-            "expr": "linear_project_progress_percent{project=~\"$project\"}",
-            "refId": "A",
-            "legendFormat": "{{project}}"
-          }
-        ],
-        "options": {
-          "minVizWidth": 75,
-          "minVizHeight": 75,
-          "orientation": "auto",
-          "showThresholdLabels": false,
-          "showThresholdMarkers": true,
-          "text": {}
-        },
-        "fieldConfig": {
-          "defaults": {
-            "min": 0,
-            "max": 100,
-            "unit": "percent",
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "red",
-                  "value": null
-                },
-                {
-                  "color": "yellow",
-                  "value": 40
-                },
-                {
-                  "color": "green",
-                  "value": 70
-                }
-              ]
-            }
-          },
-          "overrides": []
-        }
-      },
-      {
-        "id": 5,
-        "title": "Milestone Completion",
-        "type": "stat",
-        "gridPos": {
-          "h": 8,
-          "w": 6,
-          "x": 6,
-          "y": 12
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "targets": [
-          {
-            "expr": "linear_project_milestones_completed_total{project=~\"$project\"} / linear_project_milestone_total{project=~\"$project\"}",
-            "refId": "A",
-            "legendFormat": "{{project}}"
-          }
-        ],
-        "options": {
-          "colorMode": "background",
-          "graphMode": "none",
-          "justifyMode": "center",
-          "textMode": "auto",
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          }
-        },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percentunit",
-            "min": 0,
-            "max": 1,
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "red",
-                  "value": null
-                },
-                {
-                  "color": "yellow",
-                  "value": 0.4
-                },
-                {
-                  "color": "green",
-                  "value": 0.7
-                }
-              ]
-            },
-            "mappings": []
-          },
-          "overrides": []
-        }
-      },
-      {
-        "id": 6,
-        "title": "Open vs Closed Trend",
-        "type": "timeseries",
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 12
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "targets": [
-          {
-            "expr": "linear_project_issues_total{project=~\"$project\", state=~\"Done\"}",
-            "refId": "A",
-            "legendFormat": "Closed — {{project}}"
-          },
-          {
-            "expr": "linear_project_issues_total{project=~\"$project\", state!~\"Done|Cancelled\"}",
-            "refId": "B",
-            "legendFormat": "Open — {{project}}"
-          }
-        ],
-        "options": {
-          "legend": {
-            "calcs": [
-              "lastNotNull",
-              "max"
-            ],
-            "displayMode": "list",
-            "placement": "bottom",
-            "showLegend": true
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "none"
-          }
-        },
-        "fieldConfig": {
-          "defaults": {
-            "custom": {
-              "lineWidth": 2,
-              "fillOpacity": 10,
-              "gradientMode": "none",
-              "showPoints": "auto",
-              "spanNulls": false
-            },
-            "color": {
-              "mode": "palette-classic"
-            },
-            "unit": "short",
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                }
-              ]
-            }
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byFrameRefID",
-                "options": "A"
-              },
-              "properties": [
-                {
-                  "id": "color",
-                  "value": {
-                    "fixedColor": "green",
-                    "mode": "fixed"
-                  }
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byFrameRefID",
-                "options": "B"
-              },
-              "properties": [
-                {
-                  "id": "color",
-                  "value": {
-                    "fixedColor": "blue",
-                    "mode": "fixed"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        "id": 7,
-        "type": "row",
-        "title": "Risk",
-        "collapsed": false,
-        "gridPos": {
-          "h": 1,
-          "w": 24,
-          "x": 0,
-          "y": 20
-        },
-        "panels": []
-      },
-      {
-        "id": 8,
-        "title": "At Risk / Off Track Projects",
-        "type": "table",
-        "gridPos": {
-          "h": 8,
-          "w": 18,
-          "x": 0,
-          "y": 21
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "targets": [
-          {
-            "expr": "linear_project_health >= 1",
-            "refId": "A",
-            "legendFormat": "{{project}}",
-            "instant": true
-          },
-          {
-            "expr": "linear_project_progress_percent",
-            "refId": "B",
-            "legendFormat": "{{project}}",
-            "instant": true
-          },
-          {
-            "expr": "linear_project_target_date_timestamp",
-            "refId": "C",
-            "legendFormat": "{{project}}",
-            "instant": true
-          }
-        ],
-        "transformations": [
-          {
-            "id": "filterByValue",
-            "options": {
-              "filters": [
-                {
-                  "fieldName": "Value #A",
-                  "config": {
-                    "id": "greaterOrEqual",
-                    "options": {
-                      "value": 1
-                    }
-                  }
-                }
-              ],
-              "match": "any",
-              "type": "include"
-            }
-          },
-          {
-            "id": "merge",
-            "options": {}
-          },
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {
-                "Time": true,
-                "__name__": true,
-                "instance": true,
-                "job": true
-              },
-              "indexByName": {
-                "project": 0,
-                "Value #A": 1,
-                "Value #B": 2,
-                "Value #C": 3
-              },
-              "renameByName": {
-                "project": "Project",
-                "Value #A": "Health Status",
-                "Value #B": "Progress (%)",
-                "Value #C": "Target Date"
-              }
-            }
-          },
-          {
-            "id": "convertFieldType",
-            "options": {
-              "conversions": [
-                {
-                  "targetField": "Target Date",
-                  "destinationType": "time"
-                }
-              ]
+            "renameByName": {
+              "project": "Project",
+              "Value #Health": "Health",
+              "Value #Progress": "Progress (%)",
+              "Value #TargetDate": "Target Date"
             }
           }
-        ],
-        "options": {
-          "showHeader": true,
-          "sortBy": [
-            {
-              "displayName": "Health Status",
-              "desc": true
-            }
-          ],
-          "cellHeight": "sm",
-          "footer": {
-            "show": false
-          }
         },
-        "fieldConfig": {
-          "defaults": {
-            "custom": {
-              "align": "left",
-              "cellOptions": {
-                "type": "auto"
-              }
-            }
-          },
-          "overrides": [
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Health Status"
-              },
-              "properties": [
-                {
-                  "id": "custom.cellOptions",
-                  "value": {
-                    "type": "color-background"
-                  }
-                },
-                {
-                  "id": "mappings",
-                  "value": [
-                    {
-                      "type": "value",
-                      "options": {
-                        "1": {
-                          "text": "At Risk",
-                          "color": "yellow",
-                          "index": 0
-                        }
-                      }
-                    },
-                    {
-                      "type": "value",
-                      "options": {
-                        "2": {
-                          "text": "Off Track",
-                          "color": "red",
-                          "index": 1
-                        }
-                      }
-                    }
-                  ]
-                },
-                {
-                  "id": "color",
-                  "value": {
-                    "mode": "thresholds"
-                  }
-                },
-                {
-                  "id": "thresholds",
-                  "value": {
-                    "mode": "absolute",
-                    "steps": [
-                      {
-                        "color": "yellow",
-                        "value": null
-                      },
-                      {
-                        "color": "red",
-                        "value": 2
-                      }
-                    ]
-                  }
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Progress (%)"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "percent"
-                },
-                {
-                  "id": "min",
-                  "value": 0
-                },
-                {
-                  "id": "max",
-                  "value": 100
-                },
-                {
-                  "id": "custom.cellOptions",
-                  "value": {
-                    "type": "gauge",
-                    "mode": "basic"
-                  }
-                }
-              ]
-            },
-            {
-              "matcher": {
-                "id": "byName",
-                "options": "Target Date"
-              },
-              "properties": [
-                {
-                  "id": "unit",
-                  "value": "dateTimeFromNow"
-                },
-                {
-                  "id": "custom.width",
-                  "value": 180
-                }
-              ]
-            }
-          ]
-        }
-      },
-      {
-        "id": 9,
-        "title": "Projects Past Target Date",
-        "type": "stat",
-        "gridPos": {
-          "h": 8,
-          "w": 6,
-          "x": 18,
-          "y": 21
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "prometheus"
-        },
-        "targets": [
-          {
-            "expr": "count(linear_project_target_date_timestamp < time() and linear_project_progress_percent < 100) or vector(0)",
-            "refId": "A",
-            "legendFormat": "Overdue"
-          }
-        ],
-        "options": {
-          "colorMode": "background",
-          "graphMode": "none",
-          "justifyMode": "center",
-          "textMode": "auto",
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          }
-        },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "short",
-            "color": {
-              "mode": "thresholds"
-            },
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 1
-                }
-              ]
-            },
-            "mappings": [
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
               {
-                "type": "value",
-                "options": {
-                  "0": {
-                    "text": "None",
-                    "color": "green",
-                    "index": 0
+                "targetField": "Target Date",
+                "destinationType": "time"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Health",
+            "desc": true
+          }
+        ],
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Health"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "On Track",
+                        "color": "green",
+                        "index": 0
+                      }
+                    }
+                  },
+                  {
+                    "type": "value",
+                    "options": {
+                      "1": {
+                        "text": "At Risk",
+                        "color": "yellow",
+                        "index": 1
+                      }
+                    }
+                  },
+                  {
+                    "type": "value",
+                    "options": {
+                      "2": {
+                        "text": "Off Track",
+                        "color": "red",
+                        "index": 2
+                      }
+                    }
                   }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "green",
+                      "value": null
+                    },
+                    {
+                      "color": "yellow",
+                      "value": 1
+                    },
+                    {
+                      "color": "red",
+                      "value": 2
+                    }
+                  ]
                 }
               }
             ]
           },
-          "overrides": []
-        }
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Progress (%)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Target Date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              },
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
+          }
+        ]
       }
-    ]
-  }
+    },
+    {
+      "id": 3,
+      "type": "row",
+      "title": "Per-Project Drill-down \u2014 $project",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 11
+      },
+      "panels": []
+    },
+    {
+      "id": 4,
+      "title": "Progress",
+      "type": "gauge",
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "linear_project_progress_percent{project=~\"$project\"}",
+          "refId": "A",
+          "legendFormat": "{{project}}"
+        }
+      ],
+      "options": {
+        "minVizWidth": 75,
+        "minVizHeight": 75,
+        "orientation": "auto",
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 100,
+          "unit": "percent",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 40
+              },
+              {
+                "color": "green",
+                "value": 70
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "title": "Milestone Completion",
+      "type": "stat",
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "linear_project_milestones_completed_total{project=~\"$project\"} / linear_project_milestone_total{project=~\"$project\"}",
+          "refId": "A",
+          "legendFormat": "{{project}}"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.4
+              },
+              {
+                "color": "green",
+                "value": 0.7
+              }
+            ]
+          },
+          "mappings": []
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "title": "Open vs Closed Trend",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "linear_project_issues_total{project=~\"$project\", state=~\"Done\"}",
+          "refId": "A",
+          "legendFormat": "Closed \u2014 {{project}}"
+        },
+        {
+          "expr": "linear_project_issues_total{project=~\"$project\", state!~\"Done|Cancelled\"}",
+          "refId": "B",
+          "legendFormat": "Open \u2014 {{project}}"
+        }
+      ],
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "showPoints": "auto",
+            "spanNulls": false
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "short",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "A"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "B"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "type": "row",
+      "title": "Risk",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "panels": []
+    },
+    {
+      "id": 8,
+      "title": "At Risk / Off Track Projects",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 18,
+        "x": 0,
+        "y": 21
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "linear_project_health >= 1",
+          "refId": "A",
+          "legendFormat": "{{project}}",
+          "instant": true
+        },
+        {
+          "expr": "linear_project_progress_percent",
+          "refId": "B",
+          "legendFormat": "{{project}}",
+          "instant": true
+        },
+        {
+          "expr": "linear_project_target_date_timestamp",
+          "refId": "C",
+          "legendFormat": "{{project}}",
+          "instant": true
+        }
+      ],
+      "transformations": [
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "fieldName": "Value #A",
+                "config": {
+                  "id": "greaterOrEqual",
+                  "options": {
+                    "value": 1
+                  }
+                }
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "instance": true,
+              "job": true
+            },
+            "indexByName": {
+              "project": 0,
+              "Value #A": 1,
+              "Value #B": 2,
+              "Value #C": 3
+            },
+            "renameByName": {
+              "project": "Project",
+              "Value #A": "Health Status",
+              "Value #B": "Progress (%)",
+              "Value #C": "Target Date"
+            }
+          }
+        },
+        {
+          "id": "convertFieldType",
+          "options": {
+            "conversions": [
+              {
+                "targetField": "Target Date",
+                "destinationType": "time"
+              }
+            ]
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Health Status",
+            "desc": true
+          }
+        ],
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Health Status"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "1": {
+                        "text": "At Risk",
+                        "color": "yellow",
+                        "index": 0
+                      }
+                    }
+                  },
+                  {
+                    "type": "value",
+                    "options": {
+                      "2": {
+                        "text": "Off Track",
+                        "color": "red",
+                        "index": 1
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "thresholds"
+                }
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "yellow",
+                      "value": null
+                    },
+                    {
+                      "color": "red",
+                      "value": 2
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Progress (%)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "min",
+                "value": 0
+              },
+              {
+                "id": "max",
+                "value": 100
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "gauge",
+                  "mode": "basic"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Target Date"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeFromNow"
+              },
+              {
+                "id": "custom.width",
+                "value": 180
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "title": "Projects Past Target Date",
+      "type": "stat",
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 21
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "targets": [
+        {
+          "expr": "count(linear_project_target_date_timestamp < time() and linear_project_progress_percent < 100) or vector(0)",
+          "refId": "A",
+          "legendFormat": "Overdue"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "None",
+                  "color": "green",
+                  "index": 0
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      }
+    }
+  ]
 }

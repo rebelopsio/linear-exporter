@@ -1,500 +1,499 @@
 {
-  "dashboard": {
-    "title": "Linear Priority Planning Dashboard",
-    "tags": [
-      "linear",
-      "planning",
-      "leadership"
-    ],
-    "timezone": "browser",
-    "panels": [
-      {
-        "title": "Priority Distribution (Open Issues)",
-        "type": "piechart",
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 0
-        },
-        "targets": [
-          {
-            "expr": "sum by (priority) (linear_issues_by_priority{status!~\"Done|Cancelled\"})",
-            "refId": "A",
-            "legendFormat": "{{priority}}"
-          }
-        ],
-        "options": {
-          "legend": {
-            "displayMode": "list",
-            "placement": "right"
-          },
-          "pieType": "pie",
-          "displayLabels": [
-            "name",
-            "percent"
-          ],
-          "tooltip": {
-            "mode": "single"
-          }
+  "title": "Linear Priority Planning Dashboard",
+  "tags": [
+    "linear",
+    "planning",
+    "leadership"
+  ],
+  "timezone": "browser",
+  "panels": [
+    {
+      "title": "Priority Distribution (Open Issues)",
+      "type": "piechart",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "targets": [
+        {
+          "expr": "sum by (priority) (linear_issues_by_priority{status!~\"Done|Cancelled\"})",
+          "refId": "A",
+          "legendFormat": "{{priority}}"
         }
-      },
-      {
-        "title": "Status Breakdown",
-        "type": "piechart",
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 0
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "right"
         },
-        "targets": [
-          {
-            "expr": "linear_issues_by_status",
-            "refId": "A",
-            "legendFormat": "{{status}}"
-          }
+        "pieType": "pie",
+        "displayLabels": [
+          "name",
+          "percent"
         ],
-        "options": {
-          "legend": {
-            "displayMode": "list",
-            "placement": "right"
-          },
-          "pieType": "pie",
-          "displayLabels": [
-            "name",
-            "percent"
-          ]
+        "tooltip": {
+          "mode": "single"
         }
+      }
+    },
+    {
+      "title": "Status Breakdown",
+      "type": "piechart",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
       },
-      {
-        "title": "Issues by Priority & Status",
-        "type": "bargauge",
-        "gridPos": {
-          "h": 8,
-          "w": 24,
-          "x": 0,
-          "y": 8
-        },
-        "targets": [
-          {
-            "expr": "sum by (priority, status) (linear_issues_by_priority)",
-            "refId": "A",
-            "legendFormat": "{{priority}} - {{status}}"
-          }
-        ],
-        "options": {
-          "orientation": "auto",
-          "textMode": "auto",
-          "colorMode": "background",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "minVizHeight": 300,
-          "minVizWidth": 300,
-          "showThresholdLabels": false,
-          "showThresholdMarkers": true
-        },
-        "fieldConfig": {
-          "defaults": {
-            "custom": {
-              "hideFrom": {
-                "tooltip": false,
-                "viz": false,
-                "legend": false
-              }
-            },
-            "color": {
-              "mode": "thresholds"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                }
-              ]
-            }
-          }
+      "targets": [
+        {
+          "expr": "linear_issues_by_status",
+          "refId": "A",
+          "legendFormat": "{{status}}"
         }
-      },
-      {
-        "title": "Open Issues by Priority (Current Cycle Focus)",
-        "type": "table",
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 0,
-          "y": 16
+      ],
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "right"
         },
-        "targets": [
-          {
-            "expr": "sum by (priority) (linear_issues_by_cycle{cycle!=\"backlog\", status!~\"Done|Cancelled\"})",
-            "refId": "A",
-            "legendFormat": "{{priority}}"
-          }
-        ],
-        "options": {
-          "showHeader": true,
-          "sortBy": []
-        },
-        "transformations": [
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {
-                "Time": true
-              },
-              "indexByName": {},
-              "renameByName": {
-                "Value": "Count",
-                "priority": "Priority"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "title": "Team Workload (Open Issues)",
-        "type": "bargauge",
-        "gridPos": {
-          "h": 8,
-          "w": 12,
-          "x": 12,
-          "y": 16
-        },
-        "targets": [
-          {
-            "expr": "sum by (team) (linear_issues_by_team)",
-            "refId": "A",
-            "legendFormat": "{{team}}"
-          }
-        ],
-        "options": {
-          "orientation": "vertical",
-          "textMode": "auto",
-          "colorMode": "background",
-          "graphMode": "area",
-          "justifyMode": "auto"
-        }
-      },
-      {
-        "title": "Issues Aging (Days in Current State)",
-        "type": "heatmap",
-        "gridPos": {
-          "h": 8,
-          "w": 24,
-          "x": 0,
-          "y": 24
-        },
-        "targets": [
-          {
-            "expr": "linear_issue_age_hours / 24",
-            "refId": "A",
-            "legendFormat": "{{status}} - {{priority}}"
-          }
-        ],
-        "options": {
-          "calculate": false,
-          "cellGap": 2,
-          "cellRadius": 2,
-          "color": {
-            "scheme": "YlOrRd"
-          },
-          "exemplars": {
-            "color": "rgba(255,0,255,0.7)"
-          },
-          "filterValues": {
-            "le": 1e-9
-          },
-          "legend": {
-            "show": true
-          },
-          "tooltip": {
-            "show": true
-          },
-          "yAxis": {
-            "axisPlacement": "left"
-          }
-        }
-      },
-      {
-        "title": "Urgent & High Priority Issues Count",
-        "type": "stat",
-        "gridPos": {
-          "h": 4,
-          "w": 8,
-          "x": 0,
-          "y": 32
-        },
-        "targets": [
-          {
-            "expr": "sum(linear_issues_by_priority{priority=~\"urgent|high\", status!~\"Done|Cancelled\"})",
-            "refId": "A"
-          }
-        ],
-        "options": {
-          "colorMode": "background",
-          "graphMode": "area",
-          "justifyMode": "center",
-          "textMode": "auto",
-          "orientation": "auto",
-          "textAlign": "center"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "hideFrom": {
-                "tooltip": false,
-                "viz": false,
-                "legend": false
-              }
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 5
-                }
-              ]
-            },
-            "unit": "short"
-          }
-        }
-      },
-      {
-        "title": "Total Open Issues",
-        "type": "stat",
-        "gridPos": {
-          "h": 4,
-          "w": 8,
-          "x": 8,
-          "y": 32
-        },
-        "targets": [
-          {
-            "expr": "sum(linear_issues_by_status{status!~\"Done|Cancelled\"})",
-            "refId": "A"
-          }
-        ],
-        "options": {
-          "colorMode": "background",
-          "graphMode": "area",
-          "justifyMode": "center",
-          "textMode": "auto"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "blue",
-                  "value": null
-                }
-              ]
-            },
-            "unit": "short"
-          }
-        }
-      },
-      {
-        "title": "Completed Issues (Last 7 Days)",
-        "type": "stat",
-        "gridPos": {
-          "h": 4,
-          "w": 8,
-          "x": 16,
-          "y": 32
-        },
-        "targets": [
-          {
-            "expr": "increase(linear_issues_by_status{status=~\"Done|Completed\"}[7d])",
-            "refId": "A"
-          }
-        ],
-        "options": {
-          "colorMode": "background",
-          "graphMode": "area",
-          "justifyMode": "center",
-          "textMode": "auto"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                }
-              ]
-            },
-            "unit": "short"
-          }
-        }
-      },
-      {
-        "title": "Total Issues Tracked (All States)",
-        "type": "stat",
-        "gridPos": {
-          "h": 4,
-          "w": 8,
-          "x": 0,
-          "y": 36
-        },
-        "targets": [
-          {
-            "expr": "linear_total_issues_tracked",
-            "refId": "A"
-          }
-        ],
-        "options": {
-          "colorMode": "background",
-          "graphMode": "area",
-          "justifyMode": "center",
-          "textMode": "auto"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "blue",
-                  "value": null
-                }
-              ]
-            },
-            "unit": "short"
-          }
-        }
-      },
-      {
-        "title": "Issues by Cycle & Priority",
-        "type": "table",
-        "gridPos": {
-          "h": 8,
-          "w": 24,
-          "x": 0,
-          "y": 40
-        },
-        "targets": [
-          {
-            "expr": "sum by (cycle, priority) (linear_issues_by_cycle)",
-            "refId": "A",
-            "legendFormat": "{{cycle}} - {{priority}}"
-          }
-        ],
-        "options": {
-          "showHeader": true,
-          "sortBy": [
-            {
-              "displayName": "cycle",
-              "desc": false
-            }
-          ]
-        },
-        "transformations": [
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {
-                "Time": true
-              },
-              "indexByName": {},
-              "renameByName": {
-                "Value": "Count"
-              }
-            }
-          }
-        ]
-      },
-      {
-        "title": "Issues Needing Attention (Aging > 14 Days)",
-        "type": "table",
-        "gridPos": {
-          "h": 8,
-          "w": 24,
-          "x": 0,
-          "y": 48
-        },
-        "targets": [
-          {
-            "expr": "linear_issue_age_hours > 336",
-            "refId": "A",
-            "legendFormat": "{{status}} - {{priority}}"
-          }
-        ],
-        "options": {
-          "showHeader": true,
-          "sortBy": [
-            {
-              "displayName": "Value",
-              "desc": true
-            }
-          ]
-        },
-        "transformations": [
-          {
-            "id": "organize",
-            "options": {
-              "excludeByName": {
-                "Time": true
-              },
-              "renameByName": {
-                "Value": "Age (Days)",
-                "status": "Status",
-                "priority": "Priority"
-              }
-            }
-          }
+        "pieType": "pie",
+        "displayLabels": [
+          "name",
+          "percent"
         ]
       }
-    ],
-    "refresh": "5m",
-    "schemaVersion": 38,
-    "style": "dark",
-    "templating": {
-      "list": []
     },
-    "time": {
-      "from": "now-30d",
-      "to": "now"
+    {
+      "title": "Issues by Priority & Status",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "targets": [
+        {
+          "expr": "sum by (priority, status) (linear_issues_by_priority)",
+          "refId": "A",
+          "legendFormat": "{{priority}} - {{status}}"
+        }
+      ],
+      "options": {
+        "orientation": "auto",
+        "textMode": "auto",
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "minVizHeight": 300,
+        "minVizWidth": 300,
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            }
+          },
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        }
+      }
     },
-    "timepicker": {
-      "refresh_intervals": [
-        "5m",
-        "10m",
-        "30m",
-        "1h",
-        "2h",
-        "1d"
+    {
+      "title": "Open Issues by Priority (Current Cycle Focus)",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 16
+      },
+      "targets": [
+        {
+          "expr": "sum by (priority) (linear_issues_by_cycle{cycle!=\"backlog\"})",
+          "refId": "A",
+          "legendFormat": "{{priority}}"
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "sortBy": []
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Count",
+              "priority": "Priority"
+            }
+          }
+        }
       ]
     },
-    "uid": "linear-planning",
-    "version": 1
-  }
+    {
+      "title": "Team Workload (Open Issues)",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 16
+      },
+      "targets": [
+        {
+          "expr": "sum by (team) (linear_issues_by_team)",
+          "refId": "A",
+          "legendFormat": "{{team}}"
+        }
+      ],
+      "options": {
+        "orientation": "vertical",
+        "textMode": "auto",
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "title": "Issues Aging (Days in Current State)",
+      "type": "heatmap",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(linear_issue_age_hours_bucket[$__rate_interval])) by (le)",
+          "refId": "A",
+          "legendFormat": "{{le}}",
+          "format": "heatmap"
+        }
+      ],
+      "options": {
+        "calculate": false,
+        "cellGap": 2,
+        "cellRadius": 2,
+        "color": {
+          "scheme": "YlOrRd"
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-09
+        },
+        "legend": {
+          "show": true
+        },
+        "tooltip": {
+          "show": true
+        },
+        "yAxis": {
+          "axisPlacement": "left"
+        }
+      }
+    },
+    {
+      "title": "Urgent & High Priority Issues Count",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 32
+      },
+      "targets": [
+        {
+          "expr": "sum(linear_issues_by_priority{priority=~\"urgent|high\", status!~\"Done|Cancelled\"})",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "textMode": "auto",
+        "orientation": "auto",
+        "textAlign": "center"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 5
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "title": "Total Open Issues",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 32
+      },
+      "targets": [
+        {
+          "expr": "sum(linear_issues_by_status{status!~\"Done|Cancelled\"})",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "title": "Completed Issues (Last 7 Days)",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 32
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(linear_issues_completed_total[7d]))",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "title": "Total Issues Tracked (All States)",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 36
+      },
+      "targets": [
+        {
+          "expr": "linear_total_issues_tracked",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "textMode": "auto"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        }
+      }
+    },
+    {
+      "title": "Issues by Cycle & Priority",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 40
+      },
+      "targets": [
+        {
+          "expr": "sum by (cycle, priority) (linear_issues_by_cycle)",
+          "refId": "A",
+          "legendFormat": "{{cycle}} - {{priority}}"
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "cycle",
+            "desc": false
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Issues Needing Attention (Aging > 14 Days)",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 48
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, rate(linear_issue_age_hours_bucket[1h])) > 336",
+          "refId": "A",
+          "legendFormat": "{{status}} - {{priority}}"
+        }
+      ],
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Value",
+            "desc": true
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "Age (Days)",
+              "status": "Status",
+              "priority": "Priority"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5m",
+      "10m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "uid": "linear-planning",
+  "version": 1
 }
