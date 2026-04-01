@@ -7,8 +7,10 @@ on:
       - master
     paths:
       - "Dockerfile"
+      - "cmd/**"
+      - "internal/**"
+      - "pkg/**"
       - "main.go"
-      - "webhook.go"
       - "go.mod"
       - "go.sum"
       - ".github/workflows/ghcr.yml"
@@ -63,6 +65,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ steps.meta.outputs.version }}
+            COMMIT=${{ github.sha }}
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
