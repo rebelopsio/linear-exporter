@@ -112,7 +112,7 @@
       },
       "targets": [
         {
-          "expr": "linear_cycle_scope_points{cycle=~\"$cycle\", team=~\"$team\"} - linear_cycle_completed_points{cycle=~\"$cycle\", team=~\"$team\"}",
+          "expr": "sum(linear_cycle_issues_total{cycle=~\"$cycle\", team=~\"$team\"}) - linear_cycle_completed_issues_total{cycle=~\"$cycle\", team=~\"$team\"}",
           "refId": "A",
           "legendFormat": "Remaining Points"
         }
@@ -162,7 +162,7 @@
         }
       },
       "transformations": [],
-      "description": "Points remaining in the cycle. The ideal burndown line can be overlaid as an annotation from the cycle start/end dates."
+      "description": "Issues remaining in the cycle. The ideal burndown line can be overlaid as an annotation from the cycle start/end dates."
     },
     {
       "id": 3,
@@ -180,12 +180,12 @@
       },
       "targets": [
         {
-          "expr": "linear_cycle_completed_points{cycle=~\"$cycle\", team=~\"$team\"}",
+          "expr": "linear_cycle_completed_issues_total{cycle=~\"$cycle\", team=~\"$team\"}",
           "refId": "A",
           "legendFormat": "Completed"
         },
         {
-          "expr": "linear_cycle_scope_points{cycle=~\"$cycle\", team=~\"$team\"}",
+          "expr": "sum by (cycle, team) (linear_cycle_issues_total{cycle=~\"$cycle\", team=~\"$team\"})",
           "refId": "B",
           "legendFormat": "Scope"
         }
@@ -272,7 +272,7 @@
     },
     {
       "id": 5,
-      "title": "Total Scope Points",
+      "title": "Total Scope (Issues)",
       "type": "stat",
       "gridPos": {
         "h": 5,
@@ -286,7 +286,7 @@
       },
       "targets": [
         {
-          "expr": "linear_cycle_scope_points{cycle=~\"$cycle\", team=~\"$team\"}",
+          "expr": "sum(linear_cycle_issues_total{cycle=~\"$cycle\", team=~\"$team\"})",
           "refId": "A",
           "legendFormat": "Scope Points"
         }
@@ -662,7 +662,7 @@
       },
       "targets": [
         {
-          "expr": "linear_cycle_completed_points{team=~\"$team\"}",
+          "expr": "linear_cycle_completed_issues_total{team=~\"$team\"}",
           "refId": "A",
           "legendFormat": "{{cycle}}"
         }

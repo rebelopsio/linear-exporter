@@ -396,7 +396,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "increase(linear_issues_completed_total{team=~\"$team\"}[7d])",
+          "expr": "sum(linear_member_completed_issues_total{window=\"7d\"})",
           "refId": "A",
           "legendFormat": "{{team}}"
         }
@@ -482,7 +482,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.5, rate(linear_issue_cycle_time_seconds_bucket{team=~\"$team\"}[7d]))",
+          "expr": "histogram_quantile(0.5, sum by (le) (linear_issue_cycle_time_seconds_bucket{team=~\"$team\"}))",
           "refId": "A",
           "legendFormat": "P50 Cycle Time",
           "instant": true
@@ -550,7 +550,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.9, rate(linear_issue_lead_time_seconds_bucket{team=~\"$team\"}[7d]))",
+          "expr": "histogram_quantile(0.9, sum by (le) (linear_issue_lead_time_seconds_bucket{team=~\"$team\"}))",
           "refId": "A",
           "legendFormat": "P90 Lead Time",
           "instant": true
@@ -884,7 +884,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(linear_issues_completed_total{team=~\"$team\"}[1w]))",
+          "expr": "sum(linear_team_throughput_issues_per_week{team=~\"$team\"})",
           "refId": "A",
           "legendFormat": "Completed Issues",
           "interval": "1w"

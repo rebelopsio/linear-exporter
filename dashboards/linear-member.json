@@ -374,7 +374,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(linear_member_cycle_time_seconds_bucket{assignee=~\"$assignee\"}[$__rate_interval])) by (le)",
+          "expr": "sum by (le) (linear_member_cycle_time_seconds_bucket{assignee=~\"$assignee\"})",
           "refId": "A",
           "legendFormat": "{{le}}",
           "format": "heatmap"
@@ -519,7 +519,7 @@
       },
       "targets": [
         {
-          "expr": "sum(rate(linear_issue_age_seconds_bucket[$__rate_interval])) by (le)",
+          "expr": "sum by (le) (linear_issue_age_seconds_bucket)",
           "refId": "A",
           "legendFormat": "{{le}}",
           "format": "heatmap"

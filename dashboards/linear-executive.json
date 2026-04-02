@@ -65,7 +65,7 @@
       },
       "targets": [
         {
-          "expr": "sum(increase(linear_issues_completed_total{team=~\"$team\"}[30d]))",
+          "expr": "sum(linear_member_completed_issues_total{window=\"30d\"})",
           "refId": "A",
           "legendFormat": "Issues Shipped"
         }
@@ -125,7 +125,7 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.5, rate(linear_issue_cycle_time_seconds_bucket{team=~\"$team\"}[30d]))",
+          "expr": "histogram_quantile(0.5, sum by (le) (linear_issue_cycle_time_seconds_bucket{team=~\"$team\"}))",
           "refId": "A",
           "legendFormat": "P50 Cycle Time"
         }
@@ -339,19 +339,24 @@
       },
       "targets": [
         {
-          "expr": "count(linear_project_health == 0)",
+          "expr": "count(linear_project_health == 0) or vector(0)",
           "refId": "A",
           "legendFormat": "On Track"
         },
         {
-          "expr": "count(linear_project_health == 1)",
+          "expr": "count(linear_project_health == 1) or vector(0)",
           "refId": "B",
           "legendFormat": "At Risk"
         },
         {
-          "expr": "count(linear_project_health == 2)",
+          "expr": "count(linear_project_health == 2) or vector(0)",
           "refId": "C",
           "legendFormat": "Off Track"
+        },
+        {
+          "expr": "count(linear_project_health < 0) or vector(0)",
+          "refId": "D",
+          "legendFormat": "Not Set"
         }
       ],
       "options": {
@@ -461,6 +466,25 @@
               {
                 "id": "displayName",
                 "value": "Off Track"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Not Set"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#9E9E9E",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "Not Set"
               }
             ]
           }
