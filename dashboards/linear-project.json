@@ -226,6 +226,15 @@
                         "index": 2
                       }
                     }
+                  },
+                  {
+                    "type": "value",
+                    "options": {
+                      "-1": {
+                        "text": "Not Set",
+                        "color": "grey"
+                      }
+                    }
                   }
                 ]
               },
