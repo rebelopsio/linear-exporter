@@ -31,21 +31,37 @@ func (e *Exporter) graphQL(query string) (json.RawMessage, error) {
 	body := map[string]string{
 		"query": query,
 	}
-	payload, _ := json.Marshal(body)
+	payload, err := json.Marshal(body)
+	if err != nil {
+		return nil, fmt.Errorf("marshaling request body: %w", err)
+	}
 
-	req, _ := http.NewRequest("POST", "https://api.linear.app/graphql", bytes.NewReader(payload))
+	req, err := http.NewRequest("POST", "https://api.linear.app/graphql", bytes.NewReader(payload))
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", e.apiKey)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("performing request: %w", err)
 	}
 	defer resp.Body.Close()
 
-	data, _ := io.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("reading response body: %w", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("graphQL request failed: status=%d body=%s", resp.StatusCode, string(data))
+	}
+
 	var result linear.LinearResponse
-	_ = json.Unmarshal(data, &result)
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, fmt.Errorf("unmarshaling response: %w", err)
+	}
 	return result.Data, nil
 }
 
@@ -84,7 +100,7 @@ func (e *Exporter) scrapeIssues() error {
 	pageSize := 50 // Smaller pages to avoid timeouts
 	maxPages := 20 // Reasonable limit to prevent runaway queries
 
-	for page := range maxPages {
+	for page := 0; page < maxPages; page++ {
 		var afterCursor string
 		if cursor != "" {
 			afterCursor = fmt.Sprintf(`, after: "%s"`, cursor)
