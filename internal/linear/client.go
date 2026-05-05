@@ -178,7 +178,6 @@ func (c *Client) updateRateLimits(headers http.Header) {
 	}
 	if reset := headers.Get("X-RateLimit-Reset"); reset != "" {
 		if val, err := strconv.ParseInt(reset, 10, 64); err == nil {
-			c.rateLimitRemaining = int(val) // remaining from requests-remaining header
 			c.rateLimitReset = time.Unix(val, 0)
 		}
 	}
