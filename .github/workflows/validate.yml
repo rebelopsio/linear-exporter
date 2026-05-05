@@ -4,8 +4,8 @@ on:
   pull_request:
     paths:
       - "Dockerfile"
-      - "main.go"
-      - "webhook.go"
+      - "cmd/**"
+      - "internal/**"
       - "go.mod"
       - "go.sum"
       - ".github/workflows/validate.yml"
@@ -34,7 +34,7 @@ jobs:
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
             -ldflags="-w -s" \
             -a -installsuffix cgo \
-            -o linear-exporter .
+            -o linear-exporter ./cmd/exporter/
 
       - name: Check binary size
         run: |

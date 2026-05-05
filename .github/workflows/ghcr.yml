@@ -9,8 +9,6 @@ on:
       - "Dockerfile"
       - "cmd/**"
       - "internal/**"
-      - "pkg/**"
-      - "main.go"
       - "go.mod"
       - "go.sum"
       - ".github/workflows/ghcr.yml"
